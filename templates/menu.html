@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4 - Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="menu-card animate-fade">
+        <h1>Connect 4</h1>
+        <div class="controls">
+            <label>Mode:</label>
+            <select id="mode" onchange="onModeChange()">
+                <option value="human_vs_human">Human vs Human</option>
+                <option value="ai_vs_human">AI vs Human</option>
+                <option value="ai_vs_ai">AI vs AI</option>
+            </select>
+        </div>
+        <div class="controls" id="difficulty-controls">
+            <label>Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <button class="primary" onclick="startGame()">Start Game</button>
+    </div>
+
+    <script>
+    function startGame() {
+        const mode = document.getElementById('mode').value;
+        const difficulty = document.getElementById('difficulty').value;
+        sessionStorage.setItem('mode', mode);
+        sessionStorage.setItem('difficulty', difficulty);
+        fetch('/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode, difficulty })
+        }).then(() => {
+            window.location.href = '/game';
+        });
+    }
+
+    function onModeChange() {
+        const mode = document.getElementById('mode').value;
+        const diffDiv = document.getElementById('difficulty-controls');
+        if (mode === 'human_vs_human') {
+            diffDiv.classList.add('hide-difficulty');
+        } else {
+            diffDiv.classList.remove('hide-difficulty');
+        }
+    }
+    // Ensure correct state on load
+    window.addEventListener('DOMContentLoaded', onModeChange);
+    </script>
+</body>
+</html>

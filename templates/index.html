@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="game-header animate-fade">
+        <button class="back-btn" onclick="goBack()">← Menu</button>
+        <h2>Connect 4</h2>
+        <div id="status" class="status"></div>
+    </div>
+    <div id="board" class="board-grid animate-fade"></div>
+    <div class="controls animate-fade">
+        <button class="primary" onclick="window.location.reload()">Play Again</button>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        function goBack() {
+            window.location.href = '/';
+        }
+    </script>
