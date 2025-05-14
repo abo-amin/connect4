@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  connect4-app:
+    build: .
+    container_name: connect4-app
+    restart: unless-stopped
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./instance:/app/instance
+    networks:
+      - connect4-network
+
+networks:
+  connect4-network:
+    driver: bridge

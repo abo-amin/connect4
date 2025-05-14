@@ -1,0 +1,48 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Version control
+.git
+.gitignore
+.github
+
+# Environment and IDE files
+.env
+.venv
+venv/
+ENV/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker specific
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Database files
+*.db-journal
+
+# Logs
+*.log
+logs/
