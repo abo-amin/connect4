@@ -6,12 +6,11 @@
 
 ## صور من الموقع (Screenshots)
 
-ضع صور الشاشة في مجلد `screenshots/` في جذر المشروع أو داخل `static/images/`. مثال:
-
-![صفحة الدخول](screenshots/screenshot-login.png)
-![لوحة التحكم](screenshots/screenshot-dashboard.png)
-![صفحة اللعبة](screenshots/screenshot-game.png)
-![صفحة الأصدقاء](screenshots/screenshot-friends.png)
+![صفحة الدخول / Login Page](static/images/127.0.0.1_5000_auth_login_next=%2F.png)
+![صفحة التسجيل / Register Page](static/images/127.0.0.1_5000_auth_register.png)
+![نسيت كلمة المرور / Forgot Password](static/images/127.0.0.1_5000_auth_forgot-password.png)
+![لوحة التحكم / Dashboard](static/images/127.0.0.1_5000_dashboard_menu.png)
+![إحصائيات المستخدم / User Stats](static/images/127.0.0.1_5000_dashboard_stats.png)
 
 ---
 
@@ -116,46 +115,6 @@ connect4/
 
 ## Notes
 - جميع الملفات غير الضرورية تم حذفها (ملفات ترحيل/تحديث قاعدة البيانات المؤقتة، مجلدات __pycache__، إلخ)
-- يمكنك تشغيل التطبيق محليًا أو باستخدام Docker حسب الحاجة.
-- للمساهمة أو الإبلاغ عن مشاكل، يرجى فتح Issue على GitHub.
-
-
-![Connect 4 Logo](static/images/connect4-logo.svg)
-
-This is a web-based Connect 4 game implemented in Flask, featuring user authentication, game logic, AI capabilities, and a dashboard for user statistics. The project has been modularized using Flask Blueprints and containerized with Docker.
-
-## Features
-
-- **User Authentication**: Login, registration, and password reset
-- **Game Modes**: Human vs Human, AI vs Human, AI vs AI
-- **Difficulty Levels**: Easy, Medium, Hard
-- **Dashboard**: Display user statistics and game history
-- **Responsive Design**: Modern UI/UX with Bootstrap
-
-## Docker Setup
-
-### Prerequisites
-
-- Docker installed on your system ([Docker Installation Guide](https://docs.docker.com/get-docker/))
-- Docker Compose (included with Docker Desktop for Windows/Mac)
-
-### Running the Application with Docker
-
-1. **Build and start the container using Docker Compose**:
-
-```bash
-docker-compose up --build
-```
-
-This command will:
-- Build the Docker image for the application
-- Start the container with proper port mapping
-- Mount the database volume for data persistence
-
-2. **Access the application**:
-
-Once the container is running, open your browser and navigate to:
-```
 http://localhost:5000
 ```
 
