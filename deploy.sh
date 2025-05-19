@@ -2,7 +2,7 @@
 # Connect4 Docker Hub Deployment Script
 
 # Set these variables
-DOCKERHUB_USERNAME="Sherif_Talaat"
+DOCKERHUB_USERNAME="sherifyani"
 IMAGE_NAME="connect4-app"
 VERSION="1.0.0"
 

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='css/custom.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -26,10 +26,10 @@
                             </div>
                         </div>
                         <div>
-                            <a href="{{ url_for('menu') }}" class="btn-dash btn btn-outline-primary me-2">
+                            <a href="{{ url_for('dashboard.menu') }}" class="btn-dash btn btn-outline-primary me-2">
                                 <i class="bi bi-grid"></i> Game Menu
                             </a>
-                            <a href="{{ url_for('logout') }}" class="btn-dash btn btn-outline-danger">
+                            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger">
                                 <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
                         </div>
@@ -140,7 +140,7 @@
                                     <tr>
                                         <th>Date & Time</th>
                                         <th>Game Mode</th>
-                                        <th>Difficulty</th>
+                                        <th>Difficulty/Opponent</th>
                                         <th>Result</th>
                                         <th>Duration</th>
                                         <th>Moves</th>
@@ -152,7 +152,13 @@
                                             <tr>
                                                 <td class="fw-medium">{{ game.formatted_start_time }}</td>
                                                 <td>{{ game.formatted_mode }}</td>
-                                                <td>{{ game.formatted_difficulty }}</td>
+                                                <td>
+                                                    {% if game.game_mode == 'human_vs_human' and game.opponent_name %}
+                                                        <span class="badge bg-info text-dark">VS {{ game.opponent_name }}</span>
+                                                    {% else %}
+                                                        {{ game.formatted_difficulty }}
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     <span class="badge-result {% if game.result == 'win' %}badge-win{% elif game.result == 'loss' %}badge-loss{% else %}badge-draw{% endif %}">
                                                         {{ game.result | capitalize }}
@@ -171,7 +177,7 @@
                                                         <path d="M3.051 3.26a.5.5 0 0 1 .354-.613l1.932-.518a.5.5 0 0 1 .62.39c.655-.079 1.35-.117 2.043-.117.72 0 1.443.041 2.12.126a.5.5 0 0 1 .622-.399l1.932.518a.5.5 0 0 1 .306.729c.14.09.266.19.373.297.408.408.78 1.05 1.095 1.772.32.733.599 1.591.805 2.466.206.875.34 1.78.364 2.606.024.816-.059 1.602-.328 2.21a1.42 1.42 0 0 1-1.445.83c-.636-.067-1.115-.394-1.513-.773-.245-.232-.496-.526-.739-.808-.126-.148-.25-.292-.368-.423-.728-.804-1.597-1.527-3.224-1.527-1.627 0-2.496.723-3.224 1.527-.119.131-.242.275-.368.423-.243.282-.494.575-.739.808-.398.38-.877.706-1.513.773a1.42 1.42 0 0 1-1.445-.83c-.27-.608-.352-1.395-.329-2.21.024-.826.16-1.73.365-2.606.206-.875.486-1.733.805-2.466.315-.722.687-1.364 1.094-1.772a2.34 2.34 0 0 1 .382-.297.5.5 0 0 1 .306-.729l1.932-.518a.5.5 0 0 1 .61.39c.16-.918.516-1.517 1.1-1.885.218-.138.47-.218.729-.218.28 0 .537.081.766.218.596.368.954.98 1.107 1.885.057-.32.112-.65.264-.115zm-8.701 3.036L3.402 3.206a1.5 1.5 0 0 0-1.639.013H1.76c-.628.316-1.092 1.191-1.445 2.178a10.4 10.4 0 0 0-.53 2.096c-.052.878.01 2.018.621 2.998a1.5 1.5 0 0 0 1.572.536c.446-.054.84-.292 1.114-.598.232-.262.506-.613.699-.81.746-.742 1.945-1.427 3.709-1.427s2.964.685 3.71 1.428c.192.196.466.547.7.81.272.305.666.543 1.112.597a1.5 1.5 0 0 0 1.572-.536c.612-.98.675-2.12.622-2.998a10.5 10.5 0 0 0-.529-2.097c-.353-.988-.817-1.863-1.446-2.179A1.5 1.5 0 0 0 12.647 3h-.9l-.333.19c-.19.103-.35.228-.484.36-.361.361-.65.914-.806 1.768a.502.502 0 0 1-.336.443l-.01.004-.018.008a.502.502 0 0 1-.598-.127c-.264-.273-.526-.613-.736-.896C8.288 4.413 7.59 4 6.5 4s-1.789.413-2.427.946c-.21.284-.472.622-.737.896a.502.502 0 0 1-.597.127l-.019-.008-.01-.004a.502.502 0 0 1-.336-.442 3.63 3.63 0 0 0-.155-.598zm8.486-.017h.01z"/>
                                                     </svg>
                                                     <p class="text-muted mb-0">No games played yet</p>
-                                                    <p class="mt-2"><a href="{{ url_for('menu') }}" class="btn-dash btn btn-sm btn-primary mt-2">Start playing</a></p>
+                                                    <p class="mt-2"><a href="{{ url_for('dashboard.menu') }}" class="btn btn-primary ms-auto"><i class="bi bi-house me-1"></i>Back to Menu</a></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -193,7 +199,7 @@
             data: {
                 labels: ['Wins', 'Losses', 'Draws'],
                 datasets: [{
-                    data: [{{ current_user.wins }}, {{ current_user.losses }}, {{ current_user.draws }}],
+                    data: {{ [current_user.wins or 0, current_user.losses or 0, current_user.draws or 0]|tojson }},
                     backgroundColor: [
                         'rgba(40, 167, 69, 0.7)',  // green
                         'rgba(220, 53, 69, 0.7)',  // red
@@ -226,7 +232,7 @@
                 labels: ['AI vs Human', 'Human vs Human', 'AI vs AI'],
                 datasets: [{
                     label: 'Games by Mode',
-                    data: [{{ mode_stats.ai_vs_human }}, {{ mode_stats.human_vs_human }}, {{ mode_stats.ai_vs_ai }}],
+                    data: {{ [mode_stats.ai_vs_human or 0, mode_stats.human_vs_human or 0, mode_stats.ai_vs_ai or 0]|tojson }},
                     backgroundColor: 'rgba(84, 105, 212, 0.5)',
                     borderColor: 'rgba(84, 105, 212, 1)',
                     borderWidth: 1

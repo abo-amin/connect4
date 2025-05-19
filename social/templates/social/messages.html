@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="dashboard-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="dashboard-logo me-3">
+                            <img src="{{ url_for('static', filename='images/connect4-logo.svg') }}" alt="Connect 4 Logo" class="img-fluid" style="max-width: 60px;">
+                        </div>
+                        <div>
+                            <h1 class="mb-0 fw-bold">Messages</h1>
+                            <p class="text-muted mt-2">Communicate with other Connect4 players</p>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('dashboard.index') }}" class="btn-dash btn btn-outline-primary me-2">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a href="{{ url_for('social.friends') }}" class="btn-dash btn btn-outline-primary me-2">
+                            <i class="bi bi-people"></i> Friends
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-md-5">
+            <div class="auth-card h-100">
+                <div class="card-header text-white text-center">
+                    <h5 class="mb-0">Send Message</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('social.send_message') }}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">To</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                            </div>
+                            <small class="text-muted">Tip: You can message anyone, not just friends.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Message</label>
+                            <textarea class="form-control" id="content" name="content" rows="5" placeholder="Type your message here..." required></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send-fill"></i> Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-7">
+            <div class="auth-card h-100">
+                <ul class="nav nav-tabs" id="messagesTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="inbox-tab" data-bs-toggle="tab" data-bs-target="#inbox" type="button" role="tab" aria-controls="inbox" aria-selected="true">
+                            Inbox 
+                            {% set unread_count = received|selectattr('status', 'eq', 'unread')|list|length %}
+                            {% if unread_count > 0 %}
+                            <span class="badge bg-danger rounded-pill">{{ unread_count }}</span>
+                            {% endif %}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab" aria-controls="sent" aria-selected="false">Sent</button>
+                    </li>
+                </ul>
+                <div class="tab-content p-3" id="messagesTabsContent">
+                    <div class="tab-pane fade show active" id="inbox" role="tabpanel" aria-labelledby="inbox-tab">
+                        {% if received %}
+                        <div class="list-group messages-list">
+                            {% for message in received %}
+                            <div class="list-group-item list-group-item-action {% if message.status == 'unread' %}list-group-item-primary{% endif %}" data-message-id="{{ message.id }}">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h6 class="mb-1">From: {{ message.sender.username }}</h6>
+                                    <small class="text-muted">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <p class="mb-1">{{ message.content }}</p>
+                                {% if message.status == 'unread' %}
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-primary mark-read-btn" data-message-id="{{ message.id }}">
+                                        <i class="bi bi-check2-all"></i> Mark as Read
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted"></i>
+                            <p class="mt-3 text-muted">Your inbox is empty.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
+                        {% if sent %}
+                        <div class="list-group messages-list">
+                            {% for message in sent %}
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h6 class="mb-1">To: {{ message.receiver.username }}</h6>
+                                    <small class="text-muted">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <p class="mb-1">{{ message.content }}</p>
+                                <small class="text-muted">
+                                    {% if message.status == 'read' %}
+                                    <i class="bi bi-check2-all"></i> Read {{ message.read_at.strftime('%Y-%m-%d %H:%M') }}
+                                    {% else %}
+                                    <i class="bi bi-check2"></i> Delivered
+                                    {% endif %}
+                                </small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-send fs-1 text-muted"></i>
+                            <p class="mt-3 text-muted">You haven't sent any messages yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle marking messages as read
+        document.querySelectorAll('.mark-read-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const messageId = this.getAttribute('data-message-id');
+                const button = this;
+                
+                fetch(`{{ url_for('social.read_message', message_id=0) }}`.replace('0', messageId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI
+                        button.parentElement.remove();
+                        const messageItem = document.querySelector(`.list-group-item[data-message-id="${messageId}"]`);
+                        messageItem.classList.remove('list-group-item-primary');
+                        
+                        // Update badge
+                        const unreadMessages = document.querySelectorAll('.messages-list .list-group-item-primary').length;
+                        const badgeElement = document.querySelector('#inbox-tab .badge');
+                        if (unreadMessages > 0) {
+                            if (badgeElement) {
+                                badgeElement.textContent = unreadMessages;
+                            } else {
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'badge bg-danger rounded-pill';
+                                newBadge.textContent = unreadMessages;
+                                document.querySelector('#inbox-tab').appendChild(newBadge);
+                            }
+                        } else if (badgeElement) {
+                            badgeElement.remove();
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

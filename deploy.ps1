@@ -1,7 +1,7 @@
 # Connect4 Docker Hub Deployment Script for Windows
 
 # Set these variables
-$DOCKERHUB_USERNAME = "your-dockerhub-username"
+$DOCKERHUB_USERNAME = "sherifyani"
 $IMAGE_NAME = "connect4-app"
 $VERSION = "1.0.0"
 
@@ -15,7 +15,7 @@ docker tag $IMAGE_NAME "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION}"
 docker tag $IMAGE_NAME "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
 
 # Log in to Docker Hub (will prompt for password)
-Write-Host "🔑 Logging in to Docker Hub..." -ForegroundColor Yellow
+Write-Host "🔑 Logging in to Docker Hub as $DOCKERHUB_USERNAME..." -ForegroundColor Yellow
 docker login -u $DOCKERHUB_USERNAME
 
 # Push the image to Docker Hub

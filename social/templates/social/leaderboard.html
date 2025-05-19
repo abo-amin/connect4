@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="dashboard-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="dashboard-logo me-3">
+                            <img src="{{ url_for('static', filename='images/connect4-logo.svg') }}" alt="Connect 4 Logo" class="img-fluid" style="max-width: 60px;">
+                        </div>
+                        <div>
+                            <h1 class="mb-0 fw-bold">Leaderboard</h1>
+                            <p class="text-muted mt-2">See how you rank among other Connect4 players</p>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('dashboard.index') }}" class="btn-dash btn btn-outline-primary me-2">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a href="{{ url_for('social.friends') }}" class="btn-dash btn btn-outline-primary me-2">
+                            <i class="bi bi-people"></i> Friends
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <!-- Top Win Rate -->
+        <div class="col-md-4">
+            <div class="auth-card h-100">
+                <div class="card-header text-white text-center">
+                    <h5 class="mb-0"><i class="bi bi-percent me-1"></i> Top Win Rate</h5>
+                    <small class="text-white-50">Minimum 5 games</small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Player</th>
+                                    <th>Win Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in top_win_rate %}
+                                <tr {% if player.id == current_user.id %}class="table-primary"{% endif %}>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ player.username }}</td>
+                                    <td>{{ player.win_rate }}%</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-3">No data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Wins -->
+        <div class="col-md-4">
+            <div class="auth-card h-100">
+                <div class="card-header text-white text-center">
+                    <h5 class="mb-0"><i class="bi bi-trophy me-1"></i> Most Wins</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Player</th>
+                                    <th>Wins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in top_wins %}
+                                <tr {% if player.id == current_user.id %}class="table-primary"{% endif %}>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ player.username }}</td>
+                                    <td>{{ player.wins }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-3">No data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Most Games -->
+        <div class="col-md-4">
+            <div class="auth-card h-100">
+                <div class="card-header text-white text-center">
+                    <h5 class="mb-0"><i class="bi bi-controller me-1"></i> Most Games</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Player</th>
+                                    <th>Games</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in top_games %}
+                                <tr {% if player.id == current_user.id %}class="table-primary"{% endif %}>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ player.username }}</td>
+                                    <td>{{ player.total_games }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-3">No data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Your Ranking -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="auth-card">
+                <div class="card-header text-white text-center">
+                    <h5 class="mb-0">Your Ranking</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <h6 class="text-muted">Win Rate Ranking</h6>
+                                <h3 class="display-5 fw-bold">
+                                    {% set win_rate_rank = namespace(value='-') %}
+                                    {% for player in top_win_rate %}
+                                        {% if player.id == current_user.id %}
+                                            {% set win_rate_rank.value = loop.index %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ win_rate_rank.value }}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <h6 class="text-muted">Wins Ranking</h6>
+                                <h3 class="display-5 fw-bold">
+                                    {% set wins_rank = namespace(value='-') %}
+                                    {% for player in top_wins %}
+                                        {% if player.id == current_user.id %}
+                                            {% set wins_rank.value = loop.index %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ wins_rank.value }}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <h6 class="text-muted">Games Ranking</h6>
+                                <h3 class="display-5 fw-bold">
+                                    {% set games_rank = namespace(value='-') %}
+                                    {% for player in top_games %}
+                                        {% if player.id == current_user.id %}
+                                            {% set games_rank.value = loop.index %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ games_rank.value }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
